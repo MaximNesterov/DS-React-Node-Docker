@@ -1,24 +1,22 @@
-version: "3"
+version: '2'
 services:
-  frontend:
-    container_name: awesome_web
+  server:
     build:
-      context: ./client
-      dockerfile: Dockerfile
-    image: vikasraj/awesome_web
-    ports:
-      - "8080:8080"
+      context: ./server/
+    command: npm start
     volumes:
-      - '/app/node_modules'
-      - ./client:/usr/app/
-  backend:
-    container_name: awesome_server
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    image: vikasraj/awesome_server
+      - ./server/:/usr/app
+      - /usr/app/node_modules
     ports:
       - "3000:3000"
+  client:
+    build:
+      context: ./client/
+    command: npm start
     volumes:
-      - '/app/node_modules'
-      - ./server:/usr/app/
+      - ./client/:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - server
+    ports:
+      - "8080:8080"
